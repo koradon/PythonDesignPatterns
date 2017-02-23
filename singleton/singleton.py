@@ -22,6 +22,17 @@ class Borg(object):
         return obj
 
 
+class SingletoneDecorator(object):
+    def __init__(self, klass):
+        self.klass = klass
+        self.instance = None
+
+    def __call__(self, *args, **kwargs):
+        if self.instance is None:
+            self.instance = self.klass(*args, **kwargs)
+        return self.instance
+
+
 def check_NotSafeSingleton():
     print("Check NotSafeSingleton class")
     singleton = NotSafeSingleton()
@@ -58,6 +69,25 @@ def check_Borg():
     print("child.some_var: {}".format(child.some_var))
 
 
+def check_SingletonDecorator():
+    print("Check SingletonDecorator class")
+    class foo: pass
+    foo = SingletoneDecorator(foo)
+    x=foo()
+    y=foo()
+    z=foo()
+    x.val = 'x'
+    y.val = 'y'
+    z.val = 'z'
+
+    print(x.val)
+    print(y.val)
+    print(z.val)
+
+    print(x is y is z)
+
+
 if __name__ == "__main__":
     check_NotSafeSingleton()
     check_Borg()
+    check_SingletonDecorator()
